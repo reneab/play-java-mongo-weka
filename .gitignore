@@ -1,0 +1,10 @@
+bin/
+logs/
+target/
+.classpath
+.project
+.cache-main
+.cache-tests
+.settings/
+.sbtserver/
+/RUNNING_PID

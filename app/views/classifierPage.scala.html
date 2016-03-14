@@ -1,0 +1,77 @@
+@(success: Boolean,
+	name: String,
+	adultForm: Form[beans.Adult],
+	workclassList: List[String],
+	educationList: List[String],
+	maritalList: List[String],
+	occupationList: List[String],
+	relationshipList: List[String],
+	raceList: List[String],
+	sexList: List[String],
+	nativeCountryList: List[String]
+	)
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Hello classifier!</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    </head>
+    <body>
+    	<div class="container" style="width:50%; margin-left:0px;">
+	    	<div class="well">
+		   		<div class="lead">
+			   		@if(success) {
+			   			Classifier @name is now ready!
+		   			} else {
+			   			Error while building classifier: @name
+			   		}
+		   		</div>
+				<a class="btn btn-primary btn-success" href="/evaluate">Evaluate</a>
+	    	</div>
+    	</div>
+		@if(success) {
+			<div class="container" style="width:50%; margin-left:0px;">
+		       	<div class="well">
+		       		<div class="lead">Describe an individual to classify:</div>
+					@helper.form(action = routes.ClassifierController.classify(), 'class -> "form-horizontal") {
+						@helper.inputText(adultForm("age"))
+						@helper.select(field=adultForm("workclass"), options=workclassList.map(t => t -> t))
+						@helper.inputText(adultForm("fnlwgt"))
+						@helper.select(field=adultForm("education"), options=educationList.map(t => t -> t))
+						@helper.inputText(adultForm("educationNum"))
+						@helper.select(field=adultForm("maritalStatus"), options=maritalList.map(t => t -> t))
+						@helper.select(field=adultForm("occupation"), options=occupationList.map(t => t -> t))
+						@helper.select(field=adultForm("relationship"), options=relationshipList.map(t => t -> t))
+						@helper.select(field=adultForm("race"), options=raceList.map(t => t -> t))
+						@helper.select(adultForm("sex"), options=sexList.map(t => t -> t))
+						@helper.inputText(adultForm("capitalGain"))
+						@helper.inputText(adultForm("capitalLoss"))
+						@helper.inputText(adultForm("hoursPerWeek"))
+						@helper.select(field=adultForm("nativeCountry"), options=nativeCountryList.map(t => t -> t))
+						<div class="form-group">
+						    <div class="col-sm-10">
+						      <button id="submit" type="submit" value="Submit" class="btn btn-primary">Submit</button>
+						    </div>
+						  </div>
+					}
+			  		@if(flash.containsKey("error")) {
+				    <div id="error-message" class="text-danger">
+				      	<b>@flash.get("error")</b>
+				  	</div>
+				  	}
+				</div>
+			
+				@if(flash.containsKey("success")) {
+			  	<div class="well">
+				    <div id="success-message" class="text-success">
+				    	<b>Estimated yearly income: @flash.get("success")</b>
+				    </div>
+			  	</div>
+			  	}
+			</div>
+		}
+		
+	@flash.clear()		
+    </body>
+</html>
