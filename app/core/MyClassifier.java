@@ -43,7 +43,7 @@ public abstract class MyClassifier {
 		try {
 			// training classifier on training set
 			classifier.buildClassifier(model.getTrainingSet());
-			LOG.info("Successfully built " + getName() + "classifier!");
+			LOG.info("Successfully built " + getName() + " classifier!");
 			success = true;
 
 		} catch (Exception e) {

@@ -36,7 +36,7 @@ import com.mongodb.client.MongoDatabase;
 public class MongoDao {
 	private static final ALogger LOG = Logger.of(MongoDao.class);
 
-	private static final String PROPERTIES = "database.properties";
+	private static final String PROPERTIES = "conf/database.properties";
     private static final String TRAINING_COLLECTION = "training";
     private static final String TEST_COLLECTION = "test";
     
