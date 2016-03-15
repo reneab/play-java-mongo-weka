@@ -65,25 +65,25 @@ public abstract class AbstractClassifier {
 	 * @return a {@code String} summary of the evaluation
 	 */
 	public String evaluate() {
-			LOG.info("Running evaluation on " + getName() + " classifier...");
+		LOG.info("Running evaluation on " + getName() + " classifier...");
+		
+		try {
+			// building evaluation
+			Evaluation evaluation = new Evaluation(model.getTrainingSet());
+			// evaluating classifier on test set
+			evaluation.evaluateModel(classifier, model.getTestSet());
 			
-			try {
-				// building evaluation
-				Evaluation evaluation = new Evaluation(model.getTrainingSet());
-				// evaluating classifier on test set
-				evaluation.evaluateModel(classifier, model.getTestSet());
-				
-				String summaryString = evaluation.toSummaryString(
-						"============ EVALUATION RESULTS : " + getName() + " ============", true);
-				LOG.info(summaryString);
-			
-				return summaryString;
-	
-			} catch (Exception e) {
-				String errorMsg = "Could not proceed with evaluation of classifier : " + getName() + " - " + e.getMessage();
-				LOG.error(errorMsg);
-				return errorMsg;
-			}
+			String summaryString = evaluation.toSummaryString(
+					"============ EVALUATION RESULTS : " + getName() + " ============", true);
+			LOG.info(summaryString);
+		
+			return summaryString;
+
+		} catch (Exception e) {
+			String errorMsg = "Could not proceed with evaluation of classifier : " + getName() + " - " + e.getMessage();
+			LOG.error(errorMsg);
+			return errorMsg;
+		}
 	}
 	
 	/**
