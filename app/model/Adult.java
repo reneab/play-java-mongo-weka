@@ -1,4 +1,4 @@
-package beans;
+package model;
 
 /**
  * Adult object to be used as DTO between database, model and controller

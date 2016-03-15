@@ -1,8 +1,8 @@
+import model.WekaModel;
 import play.data.FormFactory;
 
 import com.google.inject.AbstractModule;
 
-import core.WekaModel;
 import dao.MongoDao;
 
 /**

@@ -11,13 +11,14 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import model.Adult;
+import model.AdultDeserializer;
+
 import org.bson.Document;
 
 import play.Logger;
 import play.Logger.ALogger;
 import play.inject.ApplicationLifecycle;
-import beans.Adult;
-import beans.AdultDeserializer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -112,13 +113,16 @@ public class MongoDao {
 		FindIterable<Document> iterable = collection.find();
     	for (Document doc : iterable) {
     		try {
-    			// TODO fix - this will not insert rows where data is missing or dirty
     			list.add(gson.fromJson(doc.toJson(), Adult.class));
+
+    			// I chose not to keep data with errors, because we need to parse them as an adult object
+    			// TODO improve this behavior to fill with missing values ('?')
     		} catch (JsonSyntaxException e) {
-    			LOG.error("Unable to parse JSON : " + e.getMessage());
+    			LOG.error("Unable to parse JSON element: " + doc.toJson());
     		} catch (NumberFormatException e) {
-    			LOG.error("Unable to parse number : " + e.getMessage());
+    			LOG.error("Unable to parse number: " + e.getMessage());
     		} catch (NullPointerException e){
+    			LOG.error("Unable to tranform object into adult: " + doc.toJson());
     		}
     	}
     	LOG.info("Parsing returned " + list.size() + " Adult objects");

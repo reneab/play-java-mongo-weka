@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import beans.Adult;
+import model.Adult;
 import dao.MongoDao;
 import play.mvc.Controller;
 import play.mvc.Result;

@@ -1,4 +1,4 @@
-package core;
+package model;
 
 /** 
  * Utility class to declare model attributes and their possible values

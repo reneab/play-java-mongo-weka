@@ -1,9 +1,13 @@
-package core;
+package classifiers;
 
+import model.WekaModel;
 import play.Logger;
 import play.Logger.ALogger;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;
+
+import java.util.Random;
+
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
@@ -14,14 +18,14 @@ import weka.filters.unsupervised.attribute.ReplaceMissingValues;
  * @author René
  *
  */
-public abstract class MyClassifier {
+public abstract class AbstractClassifier {
 	
-	private static final ALogger LOG = Logger.of(MyClassifier.class);
+	private static final ALogger LOG = Logger.of(AbstractClassifier.class);
 	
-	private Classifier classifier;
+	protected Classifier classifier;
 	private WekaModel model;
 
-	MyClassifier(Classifier classifier, WekaModel model) {
+	AbstractClassifier(Classifier classifier, WekaModel model) {
 		this.classifier = classifier;
 		this.model = model;
 	}
@@ -36,13 +40,15 @@ public abstract class MyClassifier {
 	 * Method to train the classifier on the training set of the {@link WekaModel}
 	 * @return true if training has succeeded, false if not
 	 */
-	public boolean train() {
+	public boolean train(boolean replaceMissing) {
 		LOG.info("Building " + getName() + " classifier...");
+
+		Instances trainingSet = replaceMissing ? replaceMissingValues(model.getTrainingSet()) : model.getTrainingSet();
 		boolean success = false;
 		
 		try {
 			// training classifier on training set
-			classifier.buildClassifier(model.getTrainingSet());
+			classifier.buildClassifier(trainingSet);
 			LOG.info("Successfully built " + getName() + " classifier!");
 			success = true;
 
@@ -56,25 +62,21 @@ public abstract class MyClassifier {
 	/**
 	 * Method to evaluate the classifier on the test set of the {@link WekaModel}
 	 * @param replaceMissing boolean to indicate whether to replace missing values on data sets before evaluating
-	 * @return a string summary of the evaluation
+	 * @return a {@code String} summary of the evaluation
 	 */
-	public String evaluate(boolean replaceMissing) {
+	public String evaluate() {
 			LOG.info("Running evaluation on " + getName() + " classifier...");
-			// replace missing values if requested
-			Instances trainingSet = replaceMissing ? replaceMissingValues(model.getTrainingSet()) : model.getTrainingSet();
-			Instances testSet = replaceMissing? replaceMissingValues(model.getTestSet()) : model.getTestSet();
 			
-			Evaluation evaluation;
 			try {
 				// building evaluation
-				evaluation = new Evaluation(trainingSet);
+				Evaluation evaluation = new Evaluation(model.getTrainingSet());
 				// evaluating classifier on test set
-				evaluation.evaluateModel(classifier, testSet);
-				LOG.info("Successfully ran evaluation on test set!");
+				evaluation.evaluateModel(classifier, model.getTestSet());
 				
 				String summaryString = evaluation.toSummaryString(
-						"============ RESULTS : " + getName() + " ============", true);
+						"============ EVALUATION RESULTS : " + getName() + " ============", true);
 				LOG.info(summaryString);
+			
 				return summaryString;
 	
 			} catch (Exception e) {
@@ -85,20 +87,21 @@ public abstract class MyClassifier {
 	}
 	
 	/**
-	 * A method that "cleans" a dataset by replacing missing values with computed values
+	 * A method that "cleans" a dataset by replacing missing values using weka {@link ReplaceMissingValues}
 	 * @param dirty a set of {@link Instance}
 	 * @return a set of clean {@link Instance}
 	 */
 	private Instances replaceMissingValues(Instances dirty) {
-		LOG.info("Replacing missing values...");
-		ReplaceMissingValues replace = new ReplaceMissingValues();
+		ReplaceMissingValues replacer = new ReplaceMissingValues();
+		LOG.info(replacer.globalInfo());
 	    try {
-			replace.setInputFormat(dirty);
-			return Filter.useFilter(dirty, replace); 
+			replacer.setInputFormat(dirty);
+			Instances instancesFiltered = Filter.useFilter(dirty, replacer);
+			return instancesFiltered; 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error while replacing missing values: " + e.getMessage());
+			return dirty;
 		}
-	    return dirty;
 	}
 	
 	/**
@@ -114,6 +117,32 @@ public abstract class MyClassifier {
 			return instance.toString(instance.classAttribute());
 		} catch (Exception e) {
 			return "Unable to proceed with classification - " + e.getMessage();
+		}
+	}
+	
+	/**
+	 * A method to cross-validate the classifier using Weka {@link Evaluation} object
+	 * @param folds the number of folds to perform the cross-validation
+	 * @return a {@code String} summary of the validation
+	 */
+	public String crossValidate(int folds) {
+		LOG.info("Running cross-validation " + folds + " folds on " + getName()
+				+ " classifier...");
+		try {
+			Evaluation eval = new Evaluation(model.getTrainingSet());
+			eval.crossValidateModel(classifier, model.getTrainingSet(), 10,
+					new Random(1));
+
+			String summaryString = eval.toSummaryString(
+					"============ CROSS-VALIDATION RESULTS : " + getName() + " ============", true);
+			LOG.info(summaryString);
+
+			return summaryString;
+
+		} catch (Exception e) {
+			String errorMsg = "Could not proceed with evaluation of classifier : " + getName() + " - " + e.getMessage();
+			LOG.error(errorMsg);
+			return errorMsg;
 		}
 	}
 	

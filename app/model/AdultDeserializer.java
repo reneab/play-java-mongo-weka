@@ -1,4 +1,4 @@
-package beans;
+package model;
 
 import java.lang.reflect.Type;
 

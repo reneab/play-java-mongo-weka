@@ -1,4 +1,4 @@
-package core;
+package model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +13,6 @@ import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
-import beans.Adult;
 
 /**
  * A Singleton class that holds the datamodel as Weka {@link Attribute}, as well as the training set and the test set

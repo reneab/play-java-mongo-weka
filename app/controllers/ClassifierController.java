@@ -1,20 +1,22 @@
 package controllers;
 
+import java.util.Arrays;
+
 import javax.inject.Inject;
 
+import model.Adult;
+import model.DataModelDetails;
+import model.WekaModel;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
-
-import java.util.Arrays;
-
 import views.html.classifierPage;
-import beans.Adult;
-import core.DataModelDetails;
-import core.MyClassifier;
-import core.MyNaiveBayesClassifier;
-import core.WekaModel;
+import classifiers.AbstractClassifier;
+import classifiers.MyBaggingClassifier;
+import classifiers.MyJ48Classifier;
+import classifiers.MyLogitBoostClassifier;
+import classifiers.MyRandomForestClassifier;
 import dao.MongoDao;
 
 public class ClassifierController extends Controller {
@@ -23,21 +25,27 @@ public class ClassifierController extends Controller {
 	@Inject private WekaModel model;
 	@Inject private MongoDao dao;
 
-	private MyClassifier classifier;
+	private AbstractClassifier classifier;
 	private boolean success;
 	
 	/**
-	 * Initializes the {@link MyClassifier} and trains it on the training set
+	 * Initializes the {@link AbstractClassifier} and trains it on the training set
 	 * @return
 	 */
 	public Result init() {
 		model.fillTrainingSet(dao.getTrainingSet());
 		
-//		classifier = new MyRandomForestClassifier(model);
-		classifier = new MyNaiveBayesClassifier(model);
+		// a set of Classifiers with the parameters I found give good accuracy results
+		
+//		classifier = new MyRandomForestClassifier(model, 150);
+//		classifier = new MyNaiveBayesClassifier(model);
+//		classifier = new MyDecisionTabeClassifier(model);
+//		classifier = new MyBaggingClassifier(model, 70, 100);
+//		classifier = new MyLogitBoostClassifier(model, 20);
+		classifier = new MyJ48Classifier(model, 0.1f, 3);
 		
 		// train the classifier
-		success = classifier.train();
+		success = classifier.train(true);
 		
 		Form<Adult> adultForm = formFactory.form(Adult.class);
 		// We pass the form and model details in order to build the select boxes
@@ -55,18 +63,27 @@ public class ClassifierController extends Controller {
     }
 	
 	/**
-	 * To evaluate the {@link MyClassifier} on the test set
-	 * @return
+	 * To evaluate the {@link AbstractClassifier} on the test set
+	 * @return a new page with the String summary of the evaluation
 	 */
 	public Result evaluate() {
 		// fill model with test set
 		model.fillTestSet(dao.getTestSet());
 		// evaluate the classifier
-		return ok(classifier.evaluate(false));
+		return ok(classifier.evaluate());
 	}
 	
 	/**
-	 * To use the {@link MyClassifier} on the test set
+	 * To cross-validate the {@link AbstractClassifier}
+	 * @return a new page with the String summary of the evaluation
+	 */
+	public Result crossValidate() {
+		// cross-validate the classifier 10 folds
+		return ok(classifier.crossValidate(10));
+	}
+	
+	/**
+	 * To use the {@link AbstractClassifier} on the test set
 	 * @return the same page, but with an error message in case of failure, 
 	 * and the result as String in case of success
 	 */
