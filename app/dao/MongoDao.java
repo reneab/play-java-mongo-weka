@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import model.Adult;
-import model.AdultDeserializer;
 
 import org.bson.Document;
 
@@ -21,7 +20,6 @@ import play.Logger.ALogger;
 import play.inject.ApplicationLifecycle;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
@@ -41,7 +39,7 @@ public class MongoDao {
     private static final String TRAINING_COLLECTION = "training";
     private static final String TEST_COLLECTION = "test";
     
-    private static Gson gson;
+    private static Gson gson = new Gson();;
     
     private String dbName;
     private MongoClient mongoClient;
@@ -54,7 +52,6 @@ public class MongoDao {
     @Inject
     private MongoDao(ApplicationLifecycle lifeCycle) {
     	try {
-    		gson = new GsonBuilder().registerTypeAdapter(Adult.class, new AdultDeserializer()).create();
     		
     		LOG.info("Going to instanciate Mongo DB client...");
     		Properties props = new Properties();
@@ -118,7 +115,7 @@ public class MongoDao {
     			// I chose not to keep data with errors, because we need to parse them as an adult object
     			// TODO improve this behavior to fill with missing values ('?')
     		} catch (JsonSyntaxException e) {
-    			LOG.error("Unable to parse JSON element: " + doc.toJson());
+    			LOG.error("Unable to serialize JSON element to Adult: " + doc.toJson());
     		} catch (NumberFormatException e) {
     			LOG.error("Unable to parse number: " + e.getMessage());
     		} catch (NullPointerException e){

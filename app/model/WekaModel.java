@@ -129,8 +129,14 @@ public class WekaModel {
 	 * @param value the String value to evaluate and insert
 	 */
 	private void fillInstanceWithValueOrMissing(Attribute attr, Instance instance, String value) {
+		// we set the value on the instance only if it's not missing (= "?")
 		if (value != null && !value.equalsIgnoreCase("?") ) {
-			instance.setValue(attr, value);
+			try {
+				instance.setValue(attr, value);
+			} catch (IllegalArgumentException e) {
+				// happens when a value does not match the list of values of a given attribute
+				LOG.error(e.getMessage() + " - " + attr.name() + " : " + value);
+			}
 		}
 	}
 
