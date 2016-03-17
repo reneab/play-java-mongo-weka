@@ -3,6 +3,7 @@ package dao;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -22,6 +23,8 @@ import play.inject.ApplicationLifecycle;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -58,7 +61,11 @@ public class MongoDao {
 			props.load(new FileInputStream(new File(PROPERTIES)));
 			
 			dbName = props.getProperty("dbname");
-			mongoClient = new MongoClient(props.getProperty("host", "localhost"), Integer.valueOf(props.getProperty("port", "27017")));
+			ArrayList<MongoCredential> credentials = new ArrayList<MongoCredential>();
+			credentials.add(MongoCredential.createCredential(props.getProperty("user"), dbName, props.getProperty("password").toCharArray()));
+			mongoClient = new MongoClient(
+					new ServerAddress(props.getProperty("host", "localhost"), Integer.valueOf(props.getProperty("port", "27017"))),
+					credentials);
 			
 			LOG.info("Successfully instanciated Mongo DB client to databse : " + dbName);
 			
