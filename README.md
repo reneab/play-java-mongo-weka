@@ -23,11 +23,11 @@ more trees per forest - it will make it slower but will give more accurante resu
 Finally I selected the following algorithms that I added in my code, using Weka java libraries, along with the best values I could find 
 for the parameters:
 - J48 decision tree (up to 86.2% accuracy on this dataset)
-- Decision table
-- Random Forest
-- Bagging (which separate the data in sub-data sets, and creates a classifier to run on each sample, improving it according to the specificities of the sample to get better accuracy on it)
-- LogitBoost
-- Naive Bayes (this one is very famous but runs rather poorly on this data - 83% - as it requires each "column" to be more uniformly distributed)
+- Decision table (85.9%)
+- Random Forest (84.9% on 100 trees)
+- Bagging (84.9% - it splits the data in sub-data sets, and creates a classifier to run on each sample, improving it according to the specificities of the sample to get better accuracy on it)
+- LogitBoost (85%)
+- Naive Bayes (83% - this one is very famous but runs rather poorly on this data, as it requires each "column" to be more uniformly distributed)
 
 ### Implementing
 When using Weka libraries, you have to build a model as a list of `Attributes` object: they contain the name of each column and their possible values in case of nominal (`WekaModel.java`)
