@@ -1,5 +1,4 @@
 ## This is a Play application
-## ===========================
 It uses the Play framework to build a web application with a web UI to evaluate and use machine learning algorithms for classification purposes.
 
 ### The problem
@@ -31,9 +30,9 @@ for the parameters:
 - Naive Bayes (this one is very famous but runs rather poorly on this data - 83% - as it requires each "column" to be more uniformly distributed)
 
 ### Implementing
-When using Weka libraries, you have to build a model as a list of Attributes object: they contain the name of each column and their possible values in case of nominal (in this case, the `WekaModel` object)
+When using Weka libraries, you have to build a model as a list of `Attributes` object: they contain the name of each column and their possible values in case of nominal (`WekaModel.java`)
 
-I then built a MongoDB database (as data in the real world that often does not come in a text file...), a DAO and the DTO object to hold this data (in this case, the Adult class)
+I then built a MongoDB database (as data in the real world that often does not come in a text file...), a DAO and the DTO object to hold this data (in this case, the `Adult` class)
 For the purpose of this exercice, I imported data in MongoDB using the mongoimport command line executable on CSV files:
   mongoimport -d adult -c training --type csv --file adult.data.csv --headerline
   mongoimport -d adult -c test --type csv --file adult.test.csv --headerline
@@ -42,8 +41,8 @@ Note: you have to put a header in you csv file, with the names of the columns ma
   for `GSON` serializer to work properly.
   Or you can implement you own custom `GSON` deserializer.
 
-You then have to parse the `Adult` objects to Weka Instance objects. This is also done in the WekaModel class. For missing values (null or "?" in the original data and MongoDB) you don't have to set the value on the instance and Weka will understand that it is missing.
-Missing values can be "cleaned" before training the classifier by using Weka ReplaceMissingValues class.
+You then have to parse the `Adult` objects to Weka `Instance` objects. This is also done in the `WekaModel class`. For missing values (null or "?" in the original data and MongoDB) you don't have to set the value on the instance and Weka will understand that it is missing.
+Missing values can be "cleaned" before training the classifier by using Weka `ReplaceMissingValues` class.
   
 Then I built the interface and the main controller (`ClassifierController.java`) which instanciate the Mongo connection, the model, and one the classifier mentionned above.
 It allows you to:
