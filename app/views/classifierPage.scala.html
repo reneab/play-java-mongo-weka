@@ -38,6 +38,19 @@
 			<div class="container">
 		       	<div class="well">
 		       		<div class="lead">Describe an individual to classify:</div>
+		       		
+		       		@if(flash.containsKey("success")) {
+				    <p id="success-message" class="text-success">
+				    	<b>Estimated yearly income: @flash.get("success")</b>
+				    </p>
+				    }
+				    
+				    @if(flash.containsKey("error")) {
+				    <p id="error-message" class="text-danger">
+				      	<b>@flash.get("error")</b>
+				  	</p>
+				  	}
+		       		
 					@helper.form(action = routes.ClassifierController.classify(), 'class -> "form-horizontal") {
 						@helper.inputText(adultForm("age"), 'class -> "form-control")
 						@helper.select(field=adultForm("workclass"), options=workclassList.map(t => t -> t), 'class -> "form-control")
@@ -59,20 +72,8 @@
 						    </div>
 						  </div>
 					}
-			  		@if(flash.containsKey("error")) {
-				    <div id="error-message" class="text-danger">
-				      	<b>@flash.get("error")</b>
-				  	</div>
-				  	}
+			  		
 				</div>
-			
-				@if(flash.containsKey("success")) {
-			  	<div class="well">
-				    <div id="success-message" class="text-success">
-				    	<b>Estimated yearly income: @flash.get("success")</b>
-				    </div>
-			  	</div>
-			  	}
 			</div>
 		}
 		
