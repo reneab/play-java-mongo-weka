@@ -91,8 +91,6 @@ public class MongoDao {
     public List<Adult> getTrainingSet() {
     	LOG.info("Getting collection : Training");
     	MongoCollection<Document> collection = getDb().getCollection(TRAINING_COLLECTION);
-    	LOG.info("Training set: " + collection.count());
-    	
     	return returnAsAdultList(collection);
     }
     
@@ -102,8 +100,6 @@ public class MongoDao {
     public List<Adult> getTestSet() {
     	LOG.info("Getting collection : Test");
     	MongoCollection<Document> collection = getDb().getCollection(TEST_COLLECTION);
-    	LOG.info("Test set: " + collection.count());
-
     	return returnAsAdultList(collection);
     }
 
@@ -113,6 +109,7 @@ public class MongoDao {
      * @return a list of {@link Adult}
      */
 	private List<Adult> returnAsAdultList(MongoCollection<Document> collection) {
+		LOG.info("Parsing " + collection.count() + " results from collection '" + collection.getNamespace() + "'...");
 		List<Adult> list = new LinkedList<>();
 		FindIterable<Document> iterable = collection.find();
     	for (Document doc : iterable) {
@@ -129,7 +126,7 @@ public class MongoDao {
     			LOG.error("Unable to tranform object into adult: " + doc.toJson());
     		}
     	}
-    	LOG.info("Parsing returned " + list.size() + " Adult objects");
+    	LOG.info("Successfully parsed " + list.size() + " Adult objects");
     	return list;
 	}
     
