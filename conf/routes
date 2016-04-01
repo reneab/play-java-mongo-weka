@@ -3,7 +3,8 @@
 # ~~~~
 
 GET     /		            		controllers.ClassifierController.init
-POST 	/                   		controllers.ClassifierController.classify
+POST 	/			                controllers.ClassifierController.train
+POST 	/classifier				    controllers.ClassifierController.classify
 GET     /evaluate					controllers.ClassifierController.evaluate
 GET     /cross-validate				controllers.ClassifierController.crossValidate
 GET     /db							controllers.DbController.getAll

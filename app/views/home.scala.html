@@ -1,0 +1,32 @@
+@(classifiersList: List[String],
+	classifierForm: DynamicForm)
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Hello classifier!</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
+    </head>
+    <body>
+    	<div class="container">
+	    	<div class="well">
+		   		<div class="lead">Training data is ready!</div>
+		   		@helper.form(action = routes.ClassifierController.train(), 'id -> "classifierForm") {
+					@helper.select(
+						field = classifierForm("name"), 
+						options = classifiersList.map(t => t -> t),
+						'class -> "form-control",
+						'_label -> "Please select a classifier:")
+	   				@helper.inputRadioGroup(
+          				classifierForm("replace"),
+          				options = Seq("true"->"Yes","false"->"No"),
+          				'_label -> "Replace missing values?")
+		   			
+		   			<div class="form-group">
+						<button type="submit" value="Submit" class="btn btn-primary btn-success">Launch!</button>
+		   			</div>
+	   			}
+	    	</div>
+    	</div>
+   	</body>
