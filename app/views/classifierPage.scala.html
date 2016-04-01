@@ -16,9 +16,10 @@
     <head>
         <title>Hello classifier!</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
     </head>
     <body>
-    	<div class="container" style="width:50%;">
+    	<div class="container">
 	    	<div class="well">
 		   		<div class="lead">
 			   		@if(success) {
@@ -34,24 +35,24 @@
 	    	</div>
     	</div>
 		@if(success) {
-			<div class="container" style="width:50%;">
+			<div class="container">
 		       	<div class="well">
 		       		<div class="lead">Describe an individual to classify:</div>
 					@helper.form(action = routes.ClassifierController.classify(), 'class -> "form-horizontal") {
-						@helper.inputText(adultForm("age"))
-						@helper.select(field=adultForm("workclass"), options=workclassList.map(t => t -> t))
-						@helper.inputText(adultForm("fnlwgt"))
-						@helper.select(field=adultForm("education"), options=educationList.map(t => t -> t))
-						@helper.inputText(adultForm("educationNum"))
-						@helper.select(field=adultForm("maritalStatus"), options=maritalList.map(t => t -> t))
-						@helper.select(field=adultForm("occupation"), options=occupationList.map(t => t -> t))
-						@helper.select(field=adultForm("relationship"), options=relationshipList.map(t => t -> t))
-						@helper.select(field=adultForm("race"), options=raceList.map(t => t -> t))
-						@helper.select(adultForm("sex"), options=sexList.map(t => t -> t))
-						@helper.inputText(adultForm("capitalGain"))
-						@helper.inputText(adultForm("capitalLoss"))
-						@helper.inputText(adultForm("hoursPerWeek"))
-						@helper.select(field=adultForm("nativeCountry"), options=nativeCountryList.map(t => t -> t))
+						@helper.inputText(adultForm("age"), 'class -> "form-control")
+						@helper.select(field=adultForm("workclass"), options=workclassList.map(t => t -> t), 'class -> "form-control")
+						@helper.inputText(adultForm("fnlwgt"), '_label -> "final weight", 'class -> "form-control")
+						@helper.select(field=adultForm("education"), options=educationList.map(t => t -> t), 'class -> "form-control")
+						@helper.inputText(adultForm("educationNum"), '_label -> "education number", 'class -> "form-control")
+						@helper.select(field=adultForm("maritalStatus"), options=maritalList.map(t => t -> t), '_label -> "marital status", 'class -> "form-control")
+						@helper.select(field=adultForm("occupation"), options=occupationList.map(t => t -> t), 'class -> "form-control")
+						@helper.select(field=adultForm("relationship"), options=relationshipList.map(t => t -> t), 'class -> "form-control")
+						@helper.select(field=adultForm("race"), options=raceList.map(t => t -> t), 'class -> "form-control")
+						@helper.select(adultForm("sex"), options=sexList.map(t => t -> t), 'class -> "form-control")
+						@helper.inputText(adultForm("capitalGain"), '_label -> "capital gain", 'class -> "form-control")
+						@helper.inputText(adultForm("capitalLoss"), '_label -> "capital loss", 'class -> "form-control")
+						@helper.inputText(adultForm("hoursPerWeek"), '_label -> "hours per week", 'class -> "form-control")
+						@helper.select(field=adultForm("nativeCountry"), options=nativeCountryList.map(t => t -> t), '_label -> "native country", 'class -> "form-control")
 						<div class="form-group">
 						    <div class="col-sm-10">
 						      <button id="submit" type="submit" value="Submit" class="btn btn-primary">Classify</button>

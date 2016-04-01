@@ -1,0 +1,11 @@
+body {
+	background-color: cadetblue;
+}
+
+.container {
+	width: 50%;
+}
+
+.form-control {
+	width: 50%;
+}
