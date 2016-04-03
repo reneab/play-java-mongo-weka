@@ -46,6 +46,8 @@ Missing values can be "cleaned" before training the classifier by using Weka `Re
   
 Then I built the interface and the main controller (`ClassifierController.java`) which instanciate the Mongo connection, the model, and one the classifier mentionned above.
 It allows you to:
+- select the classifier
+- choose if you want to replace missing values or not
 - evaluate the algorithm selected on the test set
 - cross-validate that algorithm 10 folds (= split the training set in 10 sub-sets, select 1, train the algorithm on each of the 9 remaning and test it on the 1 selected - repeat until all sub-sets have been used as test set)
 - simulate a classification of an individual by entering his details in a form. The result will be displayed at the bottom and be either: <=50K or >50K
@@ -62,8 +64,6 @@ You can see the result in my Heroku app : https://agile-cove-61490.herokuapp.com
  ignore these entries and not add them to my test set at all
  - display a proper error message/page when MongoDB connection cannot be established
  - Filtering the data from the GUI to avoid injections
- - Labeling of the inputs in the GUI
- - Select the algorithm in a field in the GUI
  - Select the numbers of folds to perform cross-validation
 
 
