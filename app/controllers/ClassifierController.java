@@ -92,14 +92,14 @@ public class ClassifierController extends Controller {
 		// We pass the form and model details in order to build the select boxes
 
 		return ok(classifierPage.render(success, classifier.getName(), adultForm, 
-				Arrays.asList(DataModelDetails.WORKCLASS_ATTR),
-				Arrays.asList(DataModelDetails.EDUCATION_ATTR),
-				Arrays.asList(DataModelDetails.MARITAL_STATUS_ATTR),
-				Arrays.asList(DataModelDetails.OCCUPATION_ATTR),
-				Arrays.asList(DataModelDetails.RELATIONSHIP_ATTR),
-				Arrays.asList(DataModelDetails.RACE_ATTR),
-				Arrays.asList(DataModelDetails.SEX_ATTR),
-				Arrays.asList(DataModelDetails.NATIVE_COUNTRY_ATTR)
+				DataModelDetails.WORKCLASS_ATTR,
+				DataModelDetails.EDUCATION_ATTR,
+				DataModelDetails.MARITAL_STATUS_ATTR,
+				DataModelDetails.OCCUPATION_ATTR,
+				DataModelDetails.RELATIONSHIP_ATTR,
+				DataModelDetails.RACE_ATTR,
+				DataModelDetails.SEX_ATTR,
+				DataModelDetails.NATIVE_COUNTRY_ATTR
 				));
     }
 	
@@ -144,14 +144,14 @@ public class ClassifierController extends Controller {
 		
 		// renders the same page, with the form still filled
 		return ok(classifierPage.render(success, classifier.getName(), adultForm, 
-				Arrays.asList(DataModelDetails.WORKCLASS_ATTR),
-				Arrays.asList(DataModelDetails.EDUCATION_ATTR),
-				Arrays.asList(DataModelDetails.MARITAL_STATUS_ATTR),
-				Arrays.asList(DataModelDetails.OCCUPATION_ATTR),
-				Arrays.asList(DataModelDetails.RELATIONSHIP_ATTR),
-				Arrays.asList(DataModelDetails.RACE_ATTR),
-				Arrays.asList(DataModelDetails.SEX_ATTR),
-				Arrays.asList(DataModelDetails.NATIVE_COUNTRY_ATTR)
+				DataModelDetails.WORKCLASS_ATTR,
+				DataModelDetails.EDUCATION_ATTR,
+				DataModelDetails.MARITAL_STATUS_ATTR,
+				DataModelDetails.OCCUPATION_ATTR,
+				DataModelDetails.RELATIONSHIP_ATTR,
+				DataModelDetails.RACE_ATTR,
+				DataModelDetails.SEX_ATTR,
+				DataModelDetails.NATIVE_COUNTRY_ATTR
 				));
 	}
 	
