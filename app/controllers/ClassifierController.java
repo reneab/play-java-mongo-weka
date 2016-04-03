@@ -39,11 +39,16 @@ public class ClassifierController extends Controller {
 	 * @return
 	 */
 	public Result init() {
+		// fill model with training data from the DAO
 		model.fillTrainingSet(dao.getTrainingSet());
+		
+		// pass initial form parameters
 		HashMap<String, Object> initialData = new HashMap<>();
-		initialData.put("replace", false);
+		initialData.put("replace", true);
 		DynamicForm classifierForm = formFactory.form().fill(initialData);
-		return ok(home.render(ClassifiersEnum.names(), classifierForm));
+		
+		// send the names of classifier and the classifiers list
+		return ok(home.render(classifierForm, ClassifiersEnum.names()));
 	}
 	
 	/**
@@ -54,30 +59,30 @@ public class ClassifierController extends Controller {
 		DynamicForm classifierForm = formFactory.form().bindFromRequest();
 		Boolean replace = Boolean.valueOf(classifierForm.get("replace"));
 
-		ClassifiersEnum classifierEnum = ClassifiersEnum.valueOf(classifierForm.get("name"));
-		// a set of Classifiers with the parameters I found give good accuracy results
+		ClassifiersEnum classifierEnum = ClassifiersEnum.valueOf(classifierForm.get("classifier"));
+		// Create the classifier from an Enum, with the parameters I found give good accuracy results
 		switch (classifierEnum) {
-		case J48:
-			classifier = new MyJ48Classifier(model, 0.1f, 3);
-			break;
-		case Bagging:
-			classifier = new MyBaggingClassifier(model, 70, 100);
-			break;
-		case LogitBoost:
-			classifier = new MyLogitBoostClassifier(model, 20);
-			break;
-		case RandomForest:
-			classifier = new MyRandomForestClassifier(model, 150);
-			break;
-		case NaiveBayes:
-			classifier = new MyNaiveBayesClassifier(model);
-			break;
-		case DecisionTable:
-			classifier = new MyDecisionTableClassifier(model);
-			break;
-		default:
-			classifier = new MyDecisionTableClassifier(model);
-			break;
+			case J48:
+				classifier = new MyJ48Classifier(model, 0.1f, 3);
+				break;
+			case Bagging:
+				classifier = new MyBaggingClassifier(model, 70, 100);
+				break;
+			case LogitBoost:
+				classifier = new MyLogitBoostClassifier(model, 20);
+				break;
+			case RandomForest:
+				classifier = new MyRandomForestClassifier(model, 150);
+				break;
+			case NaiveBayes:
+				classifier = new MyNaiveBayesClassifier(model);
+				break;
+			case DecisionTable:
+				classifier = new MyDecisionTableClassifier(model);
+				break;
+			default:
+				classifier = new MyDecisionTableClassifier(model);
+				break;
 		}
 
 		// train the classifier

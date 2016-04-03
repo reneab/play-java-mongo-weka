@@ -1,5 +1,5 @@
-@(classifiersList: List[String],
-	classifierForm: DynamicForm)
+@(classifierForm: DynamicForm,
+	classifiersList: List[String])
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +14,7 @@
 		   		<div class="lead">Training data is ready!</div>
 		   		@helper.form(action = routes.ClassifierController.train(), 'id -> "classifierForm") {
 					@helper.select(
-						field = classifierForm("name"), 
+						field = classifierForm("classifier"), 
 						options = classifiersList.map(t => t -> t),
 						'class -> "form-control",
 						'_label -> "Please select a classifier:")
