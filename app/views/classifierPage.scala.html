@@ -21,17 +21,21 @@
     <body>
     	<div class="container">
 	    	<div class="well">
-		   		<div class="lead">
-			   		@if(success) {
-			   			Classifier @name is now ready!
-			   			<div class="form-group">
-							<a class="btn btn-primary btn-success" href="/evaluate">Evaluate on test set</a>
-							<a class="btn btn-primary btn-danger" href="/cross-validate">Cross-validation</a>
-			   			</div>
-		   			} else {
-			   			Error while building classifier: @name
-			   		}
-		   		</div>
+		   		@if(success) {
+	   				<div class="lead">
+		   				Classifier @name is now ready!
+		   			</div>
+		   			<div class="form-group">
+						<a class="btn btn-primary btn-success" href="/evaluate">Evaluate on test set</a>
+						<a class="btn btn-primary btn-danger" href="/cross-validate">Cross-validation</a>
+						<a class="btn btn-primary pull-right" href="/">Back to home</a>
+		   			</div>
+	   			} else {
+	   				<div class="lead text-danger">
+		   				Error while building classifier: @name
+	   				</div>
+		   		}
+		   		
 	    	</div>
     	</div>
 		@if(success) {
