@@ -1,13 +1,12 @@
 package classifiers;
 
+import java.util.Random;
+
 import model.WekaModel;
 import play.Logger;
 import play.Logger.ALogger;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;
-
-import java.util.Random;
-
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
@@ -72,12 +71,11 @@ public abstract class AbstractClassifier {
 			Evaluation evaluation = new Evaluation(model.getTrainingSet());
 			// evaluating classifier on test set
 			evaluation.evaluateModel(classifier, model.getTestSet());
+
+			String summary = getFullSummaryString(evaluation);
 			
-			String summaryString = evaluation.toSummaryString(
-					"============ EVALUATION RESULTS : " + getName() + " ============", true);
-			LOG.info(summaryString);
-		
-			return summaryString;
+			LOG.info(summary);
+			return summary;
 
 		} catch (Exception e) {
 			String errorMsg = "Could not proceed with evaluation of classifier : " + getName() + " - " + e.getMessage();
@@ -85,6 +83,7 @@ public abstract class AbstractClassifier {
 			return errorMsg;
 		}
 	}
+
 	
 	/**
 	 * A method that "cleans" a dataset by replacing missing values using weka {@link ReplaceMissingValues}
@@ -133,10 +132,9 @@ public abstract class AbstractClassifier {
 			eval.crossValidateModel(classifier, model.getTrainingSet(), 10,
 					new Random(1));
 
-			String summaryString = eval.toSummaryString(
-					"============ CROSS-VALIDATION RESULTS : " + getName() + " ============", true);
-			LOG.info(summaryString);
+			String summaryString = getFullSummaryString(eval);
 
+			LOG.info(summaryString);
 			return summaryString;
 
 		} catch (Exception e) {
@@ -144,6 +142,18 @@ public abstract class AbstractClassifier {
 			LOG.error(errorMsg);
 			return errorMsg;
 		}
+	}
+	
+	private String getFullSummaryString(Evaluation evaluation) throws Exception {
+
+		StringBuilder summaryBuilder = new StringBuilder();
+		summaryBuilder.append("================ EVALUATION RESULTS : " + getName() + " ====================\n\n");
+		summaryBuilder.append(evaluation.toMatrixString());
+		summaryBuilder.append("\n");
+		summaryBuilder.append(evaluation.toSummaryString(true));
+		summaryBuilder.append("\n");
+		summaryBuilder.append(evaluation.toClassDetailsString());
+		return summaryBuilder.toString();
 	}
 	
 }
